@@ -39,8 +39,9 @@ def decode(encoded):
 
 
 
-def load_image(path,image_height) -> (list, int):
+def load_image(path:str,image_height:int) -> (list, int):
     """Loads an image from a given path and returns an array of the image's pixels and the number of actual rows in the image."""
+    print("Loading image...")
     img = Image.open(path)
     img.verify()
     img = Image.open(path)
@@ -51,8 +52,9 @@ def load_image(path,image_height) -> (list, int):
 
 
 
-def downscale(data,pixel_size) -> list:
+def downscale(data:list,pixel_size:int) -> list:
     """Because the image is actually oversized and contains extra pixels we don't need, downscaling it provides a massive performance boost."""
+    print("Downscaling image...")
     new_data = []
     for i in range(len(data)):
         if i%pixel_size == 0:
@@ -68,6 +70,7 @@ def downscale(data,pixel_size) -> list:
 
 
 def find_colors(data:list) -> dict:
+    print("Finding colors...")
     colors = {}
     index = 0
     for row in data:
@@ -84,6 +87,7 @@ def encode_row(row:list,colors:dict) -> str:
     return encode(rle)
 
 def encode_image(data:list,colors:dict) -> list:
+    print("Encoding image...")
     image = []
     for row in data:
         image.append(encode_row(row,colors))
@@ -91,6 +95,7 @@ def encode_image(data:list,colors:dict) -> list:
 
 
 def invert_colors(colors:dict):
+    print("Inverting colors...")
     """Needed to invert the colors because the way the image is encoded, the key is the background color, which is not what we want."""
     inverted_colors = {}
     for key in colors.keys():
@@ -100,10 +105,13 @@ def invert_colors(colors:dict):
 
 
 def save_image(image:list,path:str,inverted_colors:dict):
+    print("Saving image...")
+    image_height = len(image)
+    image_width = len(decode(image[0]))
     test_image = Image.new(mode="RGB",size=(image_width,image_height))
     try:
-        for i in range(len(image)):
-            for j in range(len(decode(image[i]))):
+        for i in range(image_height):
+            for j in range(image_width):
                 test_image.putpixel((j,i),tuple(inverted_colors[decode(image[i])[j]]))
     except Exception as e:
         print(e)
@@ -131,7 +139,7 @@ def main():
     colors = find_colors(data)#find colors
     image = encode_image(data,colors)#encode image using encode()
     inverted_colors = invert_colors(colors)#swap keys and values in colors
-    save_image(image,"test.png",inverted_colors)#save a test image.
+    save_image(image,"result.png",inverted_colors)#save a test image.
     save_to_js(image,inverted_colors,len(image))#saves to output.txt
 
 

@@ -1,6 +1,10 @@
 from PIL import Image
 from numpy import asarray
 from json import dumps
+
+#note, paused until I can figure out how to get the image to load properly
+
+
 def encode(string):
     encoded = ""
     #Create an array of tuples with the value and the number of times it appears in a row, then stringify it
