@@ -1,1 +1,1 @@
-Run test.py and then compare art.png and result.png.
+Run numpy_converter.py and then compare art.png and result.png.
